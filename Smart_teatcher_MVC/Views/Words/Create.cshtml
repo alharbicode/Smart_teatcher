@@ -1,0 +1,95 @@
+@model Smart_teatcher_MVC.Models.Word
+
+@{
+    ViewData["Title"] = "إضافة كلمة جديدة";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h1 class="m-0">إضافة كلمة جديدة</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-end">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right ms-1"></i>
+                        العودة للقائمة
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Create" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Text" class="form-label">نص الكلمة</label>
+                                <input asp-for="Text" class="form-control" />
+                                <span asp-validation-for="Text" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Image" class="form-label">الصورة</label>
+                                <input type="file" asp-for="Image" name="imageFile" class="form-control" accept="image/*" />
+
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Level" class="form-label">المستوى</label>
+                                <select asp-for="Level" class="form-select">
+                                    <option value="@Smart_teatcher_MVC.Models.Level.Beginner">مبتدئ</option>
+                                    <option value="@Smart_teatcher_MVC.Models.Level.Intermediate">متوسط</option>
+                                    <option value="@Smart_teatcher_MVC.Models.Level.Advanced">متقدم</option>
+                                </select>
+                                <span asp-validation-for="Level" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save ms-1"></i>
+                                حفظ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // تحسين مظهر عناصر النموذج
+            $('.form-control').addClass('mb-2');
+            
+            // معاينة الصورة قبل الرفع
+            $('input[type="file"]').change(function(e) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    if ($('#preview-image').length == 0) {
+                        $('<img id="preview-image" class="img-fluid mt-2 rounded" style="max-height: 200px;">').insertAfter('input[type="file"]');
+                    }
+                    $('#preview-image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            });
+        });
+    </script>
+}

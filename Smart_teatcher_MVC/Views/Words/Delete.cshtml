@@ -1,0 +1,116 @@
+@model Smart_teatcher_MVC.Models.Word
+
+@{
+    ViewData["Title"] = "حذف الكلمة";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">حذف الكلمة</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="alert alert-danger mb-4">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        هل أنت متأكد من حذف هذه الكلمة؟
+                    </div>
+
+                    <div class="text-center mb-4">
+                        @if (Model.Image != null)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(Model.Image)" 
+                                 class="img-fluid rounded" 
+                                 alt="@Model.Text"
+                                 style="max-height: 200px; object-fit: contain;" />
+                        }
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="detail-item">
+                                <label class="fw-bold text-muted">النص</label>
+                                <h4>@Model.Text</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="detail-item">
+                                <label class="fw-bold text-muted">المستوى</label>
+                                <h4>
+                                    <span class="badge bg-@(Model.Level switch {
+                                        Smart_teatcher_MVC.Models.Level.Beginner => "success",
+                                        Smart_teatcher_MVC.Models.Level.Intermediate => "warning",
+                                        Smart_teatcher_MVC.Models.Level.Advanced => "danger",
+                                        _ => "primary"
+                                    })">
+                                        @(Model.Level switch {
+                                            Smart_teatcher_MVC.Models.Level.Beginner => "مبتدئ",
+                                            Smart_teatcher_MVC.Models.Level.Intermediate => "متوسط",
+                                            Smart_teatcher_MVC.Models.Level.Advanced => "متقدم",
+                                            _ => Model.Level.ToString()
+                                        })
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="DeleteConfirmed" method="post" class="mt-4">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-right ms-1"></i>
+                                عودة للقائمة
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash ms-1"></i>
+                                تأكيد الحذف
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            border-radius: 15px;
+            border: none;
+        }
+        .detail-item {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            height: 100%;
+        }
+        .detail-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .detail-item h4 {
+            margin: 0;
+        }
+        .badge {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+        }
+        .alert {
+            border-radius: 10px;
+        }
+    </style>
+}

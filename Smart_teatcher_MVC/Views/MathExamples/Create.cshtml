@@ -1,0 +1,278 @@
+@model Smart_teatcher_MVC.Models.MathExample
+
+@{
+    ViewData["Title"] = "إضافة عملية حسابية جديدة";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h1 class="m-0">إضافة عملية حسابية جديدة</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-end">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right ms-1"></i>
+                        العودة للقائمة
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Create" id="createMathForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Num1" class="form-label">الرقم الأول</label>
+                                    <input asp-for="Num1" class="form-control" id="num1" />
+                                    <span asp-validation-for="Num1" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="ArithmeticOperations" class="form-label">العملية الحسابية</label>
+                                    <select asp-for="ArithmeticOperations" class="form-select" id="operation">
+                                        <option value="@Smart_teatcher_MVC.Models.ArithmeticOperations.Addition">جمع (+)</option>
+                                        <option value="@Smart_teatcher_MVC.Models.ArithmeticOperations.Subtraction">طرح (-)</option>
+                                        <option value="@Smart_teatcher_MVC.Models.ArithmeticOperations.Multiplication">ضرب (×)</option>
+                                        <option value="@Smart_teatcher_MVC.Models.ArithmeticOperations.Division">قسمة (÷)</option>
+                                    </select>
+                                    <span asp-validation-for="ArithmeticOperations" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Num2" class="form-label">الرقم الثاني</label>
+                                    <input asp-for="Num2" class="form-control" id="num2" />
+                                    <span asp-validation-for="Num2" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Level" class="form-label">المستوى</label>
+                                <select asp-for="Level" class="form-select" id="level">
+                                    <option value="@Smart_teatcher_MVC.Models.Level.Beginner">مبتدئ</option>
+                                    <option value="@Smart_teatcher_MVC.Models.Level.Intermediate">متوسط</option>
+                                    <option value="@Smart_teatcher_MVC.Models.Level.Advanced">متقدم</option>
+                                </select>
+                                <span asp-validation-for="Level" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">خطوات الحل</label>
+                                <div id="stepsContainer" class="mb-3">
+                                    <!-- سيتم إضافة الخطوات هنا بواسطة JavaScript -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm" id="addStepBtn">
+                                    <i class="fas fa-plus ms-1"></i>
+                                    إضافة خطوة جديدة
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="warningAlert" class="alert alert-warning d-none" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span id="warningMessage"></span>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-save ms-1"></i>
+                                حفظ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            let steps = [];
+            const stepsContainer = $('#stepsContainer');
+            const warningAlert = $('#warningAlert');
+            const warningMessage = $('#warningMessage');
+            const submitBtn = $('#submitBtn');
+
+            // دالة لإضافة حقل خطوة جديد
+            function addStepField(value = '') {
+                const stepIndex = stepsContainer.children().length;
+                const stepHtml = `
+                            <div class="input-group mb-2 step-group">
+                                <input type="text" name="Steps[${stepIndex}]" class="form-control step-input"
+                                       value="${value}" placeholder="أدخل خطوة الحل" required />
+                                <button type="button" class="btn btn-outline-danger remove-step">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>`;
+                stepsContainer.append(stepHtml);
+            }
+
+            // إضافة خطوة جديدة عند الضغط على الزر
+            $('#addStepBtn').click(() => addStepField());
+
+            // حذف خطوة
+            $(document).on('click', '.remove-step', function () {
+                $(this).closest('.step-group').remove();
+                updateStepsIndexes();
+            });
+
+            // تحديث مؤشرات الخطوات
+            function updateStepsIndexes() {
+                $('.step-input').each((index, input) => {
+                    $(input).attr('name', `Steps[${index}]`);
+                });
+            }
+
+            // دالة لتوليد خطوات الحل تلقائياً
+            function generateSteps() {
+                const num1 = parseInt($('#num1').val()) || 0;
+                const num2 = parseInt($('#num2').val()) || 0;
+                const operation = $('#operation').val();
+                const level = $('#level').val();
+
+                // مسح الخطوات الحالية
+                stepsContainer.empty();
+                warningAlert.addClass('d-none');
+                submitBtn.prop('disabled', false);
+
+                // التحقق من صحة المدخلات
+                if (isNaN(num1) || isNaN(num2)) {
+                    warningMessage.text(' هيا نتأكد من كتابة الأرقام بشكل صحيح.');
+                    warningAlert.removeClass('d-none');
+                    submitBtn.prop('disabled', true);
+                    return;
+                }
+
+                // التحقق من عملية الطرح
+                if (operation === 'Subtraction' && num2 > num1) {
+                    if (level !== 'Advanced') {
+                        warningMessage.text(' في هذا المستوى، لا يمكننا طرح رقم كبير من رقم صغير، هذا سيجعل النتيجة تحت الصفر. هيا نغير الأرقام أو نختار مستوى أصعب.');
+                        warningAlert.removeClass('d-none');
+                        submitBtn.prop('disabled', true);
+                        return;
+                    }
+                }
+
+                // التحقق من عملية القسمة
+                if (operation === 'Division') {
+                    // التحقق من القسمة على صفر
+                    if (num2 === 0) {
+                        warningMessage.text('يا أصدقائي الصغار، لا يمكننا تقسيم أي شيء على صفر! هذه العملية غير ممكنة.');
+                        warningAlert.removeClass('d-none');
+                        submitBtn.prop('disabled', true);
+                        return;
+                    }
+                    // التحقق من باقي القسمة
+                    if (num1 % num2 !== 0) {
+                        if (level === 'Beginner') {
+                            warningMessage.text('، في المستوى الأول، نريد أن تكون القسمة سهلة وتعطينا أرقام صحيحة بدون باقي. هيا نختار أرقامًا أخرى أو نغير المستوى.');
+                            warningAlert.removeClass('d-none');
+                            submitBtn.prop('disabled', true);
+                            return;
+                        } else {
+                            // إضافة ملاحظة عن وجود باقي في القسمة
+                            warningMessage.text('، هذه القسمة ستعطينا نتيجة بها جزء كسري أو باقي، ولكن لا تقلقوا، هذا طبيعي!');
+                            warningAlert.removeClass('d-none');
+                            submitBtn.prop('disabled', false);
+                        }
+                    }
+                    // التحقق من الأرقام الكبيرة
+                    if (num1 > 100 || num2 > 100) {
+                        if (level === 'Beginner' || level === 'Intermediate') {
+                            warningMessage.text('  هذه الأرقام كبيرة قليلًا على المستوى الحالي. هيا نستخدم أرقامًا أصغر أو نختار مستوى أصعب!');
+                            warningAlert.removeClass('d-none');
+                            submitBtn.prop('disabled', true);
+                            return;
+                        }
+                    }
+                }
+
+                // توليد الخطوات حسب العملية
+                let steps = [];
+                switch (operation) {
+                    case 'Addition':
+                        steps = [
+                            `يا أبطال، أول خطوة، نرى من هو الرقم الأكبر بين ${num1} و ${num2}، إنه ${Math.max(num1, num2)}!`,
+                            `الآن، نضيف الرقم الصغير ${Math.min(num1, num2)} إلى الرقم الكبير،`,
+                            `هيا نجمعهم معًا، والناتج يكون ${num1 + num2}، ممتاز!`,
+                        ];
+                        break;
+                    case 'Subtraction':
+                        steps = [
+                            ` نبدأ بالرقم الأول ${num1}،`,
+                            `والآن، ننقص منه الرقم الثاني ${num2}،`,
+                            `هيا نطرح، والناتج النهائي هو ${num1 - num2}، أحسنتم!`,
+                        ];
+                        break;
+                    case 'Multiplication':
+                        steps = [
+                            ` تذكروا أن الضرب هو تكرار للجمع.`,
+                            `سنكرر جمع الرقم ${num1} عدد ${num2} مرات، مثل ${num1} + ${num1} + ... (نكررها ${num2} مرة).`,
+                            `الآن، نجمعهم معًا، والناتج هو ${num1 * num2}، عمل رائع!`,
+                        ];
+                        break;
+                    case 'Division':
+                        if (num2 !== 0) {
+                            steps = [
+                                ` القسمة تعني أن نوزع بالتساوي.`,
+                                `هيا نقسم ${num1} على ${num2} مجموعات متساوية.`
+                            ];
+                            // إضافة خطوة إضافية حسب نوع القسمة
+                            if (num1 % num2 === 0) {
+                                steps.push(`إذن، الناتج النهائي هو ${num1 / num2}.`);
+                            } else {
+                                const quotient = Math.floor(num1 / num2);
+                                const remainder = num1 % num2;
+                                steps.push(`إذن، الناتج هو ${quotient} والباقي هو ${remainder}، ممتاز!`);
+                            }
+                        }
+                        break;
+                }
+
+                // إضافة الخطوات إلى النموذج
+                steps.forEach(step => addStepField(step));
+            }
+
+            // توليد الخطوات عند تغيير أي من المدخلات
+            $('#num1, #num2, #operation, #level').on('change', generateSteps);
+
+            // التحقق من النموذج قبل الإرسال
+            $('#createMathForm').on('submit', function (e) {
+                if (stepsContainer.children().length === 0) {
+                    e.preventDefault();
+                    warningMessage.text(' تذكروا أن تكتبوا خطوات الحل قبل الحفظ.');
+                    warningAlert.removeClass('d-none');
+                }
+            });
+
+            // توليد الخطوات الأولية
+            generateSteps();
+        });
+    </script>
+}
+
+}
+
+}

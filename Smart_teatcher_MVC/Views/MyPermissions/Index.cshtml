@@ -1,0 +1,295 @@
+@model Smart_teatcher_MVC.Models.UserPermissions
+
+@{
+    ViewData["Title"] = "صلاحياتي";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h1 class="m-0">صلاحياتي</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            @if (ViewBag.IsRoot)
+            {
+                <div class="alert alert-success mb-4 root-welcome">
+                    <div class="d-flex align-items-center">
+                        <div class="root-icon me-3">
+                            <i class="fas fa-crown fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="alert-heading mb-2">مرحباً بك أيها المشرف الرئيسي @ViewBag.UserName!</h4>
+                            <p class="mb-0">أنت تتمتع بكامل الصلاحيات في النظام. يمكنك الوصول إلى جميع الميزات وإدارة كافة العمليات.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.IsAdmin)
+            {
+                <div class="alert alert-info mb-4 admin-welcome">
+                    <div class="d-flex align-items-center">
+                        <div class="admin-icon me-3">
+                            <i class="fas fa-user-shield fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="alert-heading mb-2">مرحباً بك أيها المشرف @ViewBag.UserName!</h4>
+                            <p class="mb-0">مرحباً بك في لوحة صلاحياتك. يمكنك الاطلاع على الصلاحيات المتاحة لك أدناه.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="user-info mb-4">
+                        <h4>معلومات المستخدم</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>اسم المستخدم:</strong> @ViewBag.UserName</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>البريد الإلكتروني:</strong> @ViewBag.Email</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="permissions-section">
+                        <h4 class="mb-4">الصلاحيات</h4>
+                        
+                        <!-- الجمل -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">صلاحيات الجمل</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-success mb-3">الصلاحيات المتاحة</h6>
+                                        <ul class="list-unstyled">
+                                            @if (Model.CanViewSentences)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>عرض الجمل</li>
+                                            }
+                                            @if (Model.CanAddSentences)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>إضافة جمل جديدة</li>
+                                            }
+                                            @if (Model.CanEditSentences)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>تعديل الجمل</li>
+                                            }
+                                            @if (Model.CanDeleteSentences)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>حذف الجمل</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-danger mb-3">الصلاحيات غير المتاحة</h6>
+                                        <ul class="list-unstyled">
+                                            @if (!Model.CanViewSentences)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>عرض الجمل</li>
+                                            }
+                                            @if (!Model.CanAddSentences)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>إضافة جمل جديدة</li>
+                                            }
+                                            @if (!Model.CanEditSentences)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>تعديل الجمل</li>
+                                            }
+                                            @if (!Model.CanDeleteSentences)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>حذف الجمل</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- الكلمات -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">صلاحيات الكلمات</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-success mb-3">الصلاحيات المتاحة</h6>
+                                        <ul class="list-unstyled">
+                                            @if (Model.CanViewWords)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>عرض الكلمات</li>
+                                            }
+                                            @if (Model.CanAddWords)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>إضافة كلمات جديدة</li>
+                                            }
+                                            @if (Model.CanEditWords)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>تعديل الكلمات</li>
+                                            }
+                                            @if (Model.CanDeleteWords)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>حذف الكلمات</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-danger mb-3">الصلاحيات غير المتاحة</h6>
+                                        <ul class="list-unstyled">
+                                            @if (!Model.CanViewWords)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>عرض الكلمات</li>
+                                            }
+                                            @if (!Model.CanAddWords)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>إضافة كلمات جديدة</li>
+                                            }
+                                            @if (!Model.CanEditWords)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>تعديل الكلمات</li>
+                                            }
+                                            @if (!Model.CanDeleteWords)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>حذف الكلمات</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- العمليات الحسابية -->
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">صلاحيات العمليات الحسابية</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-success mb-3">الصلاحيات المتاحة</h6>
+                                        <ul class="list-unstyled">
+                                            @if (Model.CanViewMathOperations)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>عرض العمليات الحسابية</li>
+                                            }
+                                            @if (Model.CanAddMathOperations)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>إضافة عمليات حسابية جديدة</li>
+                                            }
+                                            @if (Model.CanEditMathOperations)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>تعديل العمليات الحسابية</li>
+                                            }
+                                            @if (Model.CanDeleteMathOperations)
+                                            {
+                                                <li><i class="fas fa-check text-success me-2"></i>حذف العمليات الحسابية</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-danger mb-3">الصلاحيات غير المتاحة</h6>
+                                        <ul class="list-unstyled">
+                                            @if (!Model.CanViewMathOperations)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>عرض العمليات الحسابية</li>
+                                            }
+                                            @if (!Model.CanAddMathOperations)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>إضافة عمليات حسابية جديدة</li>
+                                            }
+                                            @if (!Model.CanEditMathOperations)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>تعديل العمليات الحسابية</li>
+                                            }
+                                            @if (!Model.CanDeleteMathOperations)
+                                            {
+                                                <li><i class="fas fa-times text-danger me-2"></i>حذف العمليات الحسابية</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .card-header {
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .list-unstyled li {
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .user-info {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .root-welcome {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .root-welcome .alert-heading {
+            color: white;
+            font-weight: bold;
+        }
+
+        .root-icon {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-welcome {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .admin-icon {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+}

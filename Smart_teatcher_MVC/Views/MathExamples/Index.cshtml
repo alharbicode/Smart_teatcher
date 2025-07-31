@@ -1,0 +1,157 @@
+@model IEnumerable<Smart_teatcher_MVC.Models.MathExample>
+@using Smart_teatcher_MVC.Extensions
+
+@{
+    ViewData["Title"] = "العمليات الحسابية";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h1 class="m-0">العمليات الحسابية</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-end">
+                    @if (User.HasPermission("CanAddMathOperations"))
+                    {
+                        <a asp-action="Create" class="btn btn-primary" data-permission="CanAddMathOperations">
+                            <i class="fas fa-plus ms-1"></i>
+                            إضافة عملية حسابية
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="math-operation">
+                                @item.Num1 @GetOperationSymbol(item.ArithmeticOperations) @item.Num2
+                            </div>
+                            <span class="badge bg-@(GetLevelClass(item.Level))">@GetLevelInArabic(item.Level)</span>
+                        </div>
+
+                        <div class="text-muted small mb-3">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            @item.CreatedAt.ToString("dd/MM/yyyy")
+                        </div>
+
+                        <div class="card-actions">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-2">
+                                <i class="fas fa-eye ms-1"></i>
+                                تفاصيل
+                            </a>
+                            @if (User.HasPermission("CanEditMathOperations"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-success me-2" data-permission="CanEditMathOperations">
+                                    <i class="fas fa-edit ms-1"></i>
+                                    تعديل
+                                </a>
+                            }
+                            @if (User.HasPermission("CanDeleteMathOperations"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" data-permission="CanDeleteMathOperations">
+                                    <i class="fas fa-trash-alt ms-1"></i>
+                                    حذف
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .math-operation {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('a[data-permission]').on('click', function (e) {
+                var action = $(this).attr('href').split('/').pop().split('?')[0];
+                var checkPermission = false;
+
+                switch (action) {
+                    case 'Edit':
+                        checkPermission = !@(User.HasPermission("CanEditMathOperations").ToString().ToLower());
+                        break;
+                    case 'Delete':
+                        checkPermission = !@(User.HasPermission("CanDeleteMathOperations").ToString().ToLower());
+                        break;
+                    case 'Create':
+                        checkPermission = !@(User.HasPermission("CanAddMathOperations").ToString().ToLower());
+                        break;
+                }
+
+                if (checkPermission) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'عذراً',
+                        text: 'ليس لديك صلاحية للقيام بهذه العملية',
+                        icon: 'warning',
+                        confirmButtonText: 'حسناً'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+@functions {
+    private string GetOperationSymbol(ArithmeticOperations operation)
+    {
+        return operation switch
+        {
+            ArithmeticOperations.Addition => "+",
+            ArithmeticOperations.Subtraction => "-",
+            ArithmeticOperations.Multiplication => "×",
+            ArithmeticOperations.Division => "÷",
+            _ => ""
+        };
+    }
+
+    private string GetLevelInArabic(Smart_teatcher_MVC.Models.Level level)
+    {
+        return level switch
+        {
+            Smart_teatcher_MVC.Models.Level.Beginner => "مبتدئ",
+            Smart_teatcher_MVC.Models.Level.Intermediate => "متوسط",
+            Smart_teatcher_MVC.Models.Level.Advanced => "متقدم",
+            _ => level.ToString()
+        };
+    }
+
+    private string GetLevelClass(Smart_teatcher_MVC.Models.Level level)
+    {
+        return level switch
+        {
+            Smart_teatcher_MVC.Models.Level.Beginner => "success",
+            Smart_teatcher_MVC.Models.Level.Intermediate => "warning",
+            Smart_teatcher_MVC.Models.Level.Advanced => "danger",
+            _ => "primary"
+        };
+    }
+}

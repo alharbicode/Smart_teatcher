@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] المعلم  الذكي لمحو الأمية</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <header>
+        @{
+            var isLoginPage = Context.Request.Path.Value?.Contains("/Account/Login") ?? false;
+            var isRegisterPage = Context.Request.Path.Value?.Contains("/Account/Register") ?? false;
+            var isAuthPage = isLoginPage || isRegisterPage;
+        }
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="" asp-action="">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    المعلم الذكي لمحو الأمية
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                @if (!isAuthPage)
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-controller="Home" asp-action="Index">
+                                    <i class="fas fa-home me-1"></i>
+                                    الرئيسية
+                                </a>
+                            </li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @if (User.IsInRole("Root"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" asp-controller="Users" asp-action="Index">
+                                            <i class="fas fa-users me-1"></i>
+                                            إدارة المستخدمين
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" asp-controller="Words" asp-action="Index">
+                                            <i class="fas fa-book me-1"></i>
+                                            الكلمات
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" asp-controller="Sentences" asp-action="Index">
+                                            <i class="fas fa-pencil-alt me-1"></i>
+                                            الجمل
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" asp-controller="MathExamples" asp-action="Index">
+                                            <i class="fas fa-calculator me-1"></i>
+                                            العمليات الحسابية
+                                        </a>
+                                    </li>
+                                }
+                                else if (User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" asp-controller="Words" asp-action="Index">
+                                            <i class="fas fa-book me-1"></i>
+                                            الكلمات
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" asp-controller="Sentences" asp-action="Index">
+                                            <i class="fas fa-pencil-alt me-1"></i>
+                                            الجمل
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" asp-controller="MathExamples" asp-action="Index">
+                                            <i class="fas fa-calculator me-1"></i>
+                                            العمليات الحسابية
+                                        </a>
+                                    </li>
+                                }
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-controller="MyPermissions" asp-action="Index">
+                                        <i class="fas fa-key ms-1"></i>
+                                        صلاحياتي
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <ul class="navbar-nav">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-controller="Account" asp-action="Logout">
+                                        <i class="fas fa-sign-out-alt me-1"></i>
+                                        تسجيل الخروج (@User.Identity.Name)
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-controller="Account" asp-action="Login">
+                                        <i class="fas fa-sign-in-alt me-1"></i>
+                                        تسجيل الدخول
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer bg-primary text-white mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <!-- القسم الأول: روابط سريعة -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a class="text-white text-decoration-none" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home ms-2"></i>الرئيسية
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="text-white text-decoration-none" asp-controller="Words" asp-action="Index">
+                                <i class="fas fa-book ms-2"></i>الكلمات
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="text-white text-decoration-none" asp-controller="Sentences" asp-action="Index">
+                                <i class="fas fa-pencil-alt ms-2"></i>الجمل
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- القسم الثاني: تواصل معنا -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">تواصل معنا</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a class="text-white text-decoration-none" href="mailto:amjed_alhomidy@gmail.com">
+                                <i class="fas fa-envelope ms-2"></i>amjed_alhomidy@gmail.com
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="text-white text-decoration-none" href="tel:+9677782085575">
+                                <i class="fas fa-phone ms-2"></i>+9677782085575
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="text-white text-decoration-none" href="#">
+                                <i class="fas fa-map-marker-alt ms-2"></i>اليمن، صنعاء
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- القسم الثالث: وسائل التواصل الاجتماعي -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">تابعنا على</h5>
+                    <div class="d-flex gap-3 mb-4">
+                        <a href="#" class="text-white fs-5 text-decoration-none" title="فيسبوك">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-white fs-5 text-decoration-none" title="تويتر">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white fs-5 text-decoration-none" title="انستغرام">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white fs-5 text-decoration-none" title="يوتيوب">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- حقوق النشر -->
+            <div class="border-top border-light pt-3 text-center">
+                <p class="mb-0">&copy; @DateTime.Now.Year - المعلم الذكي لمحو الأمية - جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

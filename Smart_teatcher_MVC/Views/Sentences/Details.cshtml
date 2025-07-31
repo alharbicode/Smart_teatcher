@@ -1,0 +1,109 @@
+@using Smart_teatcher_MVC.Extensions
+@model Smart_teatcher_MVC.Models.Sentence
+
+@{
+    ViewData["Title"] = "تفاصيل الجملة";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h1 class="m-0">تفاصيل الجملة</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-end">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right ms-1"></i>
+                        العودة للقائمة
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="info-group">
+                                <label class="text-muted">نص الجملة</label>
+                                <p class="mb-0">@Model.Text</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="info-group">
+                                <label class="text-muted">المستوى</label>
+                                <p class="mb-0">@Model.Level</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="info-group">
+                                <label class="text-muted">تاريخ الإنشاء</label>
+                                <p class="mb-0">@Model.CreatedAt.ToString("dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        @if (User.HasPermission("CanEditSentences"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2" data-permission="CanEditSentences">
+                                <i class="fas fa-edit ms-1"></i>
+                                تعديل
+                            </a>
+                            
+                        }
+                        @if (User.HasPermission("CanDeleteSentences"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger" data-permission="CanDeleteSentences">
+                                <i class="fas fa-trash-alt ms-1"></i>
+                                حذف
+                            </a>
+                        }
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('a[data-permission]').on('click', function (e) {
+                var action = $(this).attr('href').split('/').pop().split('?')[0];
+                var checkPermission = false;
+
+                switch (action) {
+                    case 'Edit':
+                        checkPermission = !@(User.HasPermission("CanEditSentences").ToString().ToLower());
+                        break;
+                    case 'Delete':
+                        checkPermission = !@(User.HasPermission("CanDeleteSentences").ToString().ToLower());
+                        break;
+                    case 'Create':
+                        checkPermission = !@(User.HasPermission("CanAddSentences").ToString().ToLower());
+                        break;
+                }
+
+                if (checkPermission) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'عذراً',
+                        text: 'ليس لديك صلاحية للقيام بهذه العملية',
+                        icon: 'warning',
+                        confirmButtonText: 'حسناً'
+                    });
+                }
+            });
+        });
+    </script>
+}
+

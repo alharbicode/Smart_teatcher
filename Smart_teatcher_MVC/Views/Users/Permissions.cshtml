@@ -1,0 +1,203 @@
+@model Smart_teatcher_MVC.Models.UserPermissionsViewModel
+@{
+    ViewData["Title"] = "إدارة صلاحيات المستخدم";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">إدارة صلاحيات المستخدم: @Model.Username</h2>
+
+                    <div id="alertPlaceholder"></div>
+
+                    <form id="permissionsForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="userId" value="@Model.UserId" />
+
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">صلاحيات الجمل</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanViewSentences" 
+                                           @(Model.CanViewSentences ? "checked" : "")>
+                                    <label class="form-check-label" for="CanViewSentences">
+                                        عرض الجمل
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanAddSentences" 
+                                           @(Model.CanAddSentences ? "checked" : "")>
+                                    <label class="form-check-label" for="CanAddSentences">
+                                        إضافة جمل جديدة
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanEditSentences" 
+                                           @(Model.CanEditSentences ? "checked" : "")>
+                                    <label class="form-check-label" for="CanEditSentences">
+                                        تعديل الجمل
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="CanDeleteSentences" 
+                                           @(Model.CanDeleteSentences ? "checked" : "")>
+                                    <label class="form-check-label" for="CanDeleteSentences">
+                                        حذف الجمل
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">صلاحيات الكلمات</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanViewWords" 
+                                           @(Model.CanViewWords ? "checked" : "")>
+                                    <label class="form-check-label" for="CanViewWords">
+                                        عرض الكلمات
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanAddWords" 
+                                           @(Model.CanAddWords ? "checked" : "")>
+                                    <label class="form-check-label" for="CanAddWords">
+                                        إضافة كلمات جديدة
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanEditWords" 
+                                           @(Model.CanEditWords ? "checked" : "")>
+                                    <label class="form-check-label" for="CanEditWords">
+                                        تعديل الكلمات
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="CanDeleteWords" 
+                                           @(Model.CanDeleteWords ? "checked" : "")>
+                                    <label class="form-check-label" for="CanDeleteWords">
+                                        حذف الكلمات
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">صلاحيات العمليات الحسابية</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanViewMathOperations" 
+                                           @(Model.CanViewMathOperations ? "checked" : "")>
+                                    <label class="form-check-label" for="CanViewMathOperations">
+                                        عرض العمليات الحسابية
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanAddMathOperations" 
+                                           @(Model.CanAddMathOperations ? "checked" : "")>
+                                    <label class="form-check-label" for="CanAddMathOperations">
+                                        إضافة عمليات حسابية جديدة
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="CanEditMathOperations" 
+                                           @(Model.CanEditMathOperations ? "checked" : "")>
+                                    <label class="form-check-label" for="CanEditMathOperations">
+                                        تعديل العمليات الحسابية
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="CanDeleteMathOperations" 
+                                           @(Model.CanDeleteMathOperations ? "checked" : "")>
+                                    <label class="form-check-label" for="CanDeleteMathOperations">
+                                        حذف العمليات الحسابية
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                حفظ الصلاحيات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function showAlert(message, type) {
+                const alertHtml = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+                $('#alertPlaceholder').html(alertHtml);
+            }
+
+            $('#permissionsForm').on('submit', function (e) {
+                e.preventDefault();
+                
+                const userId = $('#userId').val();
+                const token = $('input[name="__RequestVerificationToken"]').val();
+                
+                const permissions = {
+                    Id: 0,
+                    UserId: userId,
+                    CanViewSentences: $('#CanViewSentences').is(':checked'),
+                    CanAddSentences: $('#CanAddSentences').is(':checked'),
+                    CanEditSentences: $('#CanEditSentences').is(':checked'),
+                    CanDeleteSentences: $('#CanDeleteSentences').is(':checked'),
+                    CanViewWords: $('#CanViewWords').is(':checked'),
+                    CanAddWords: $('#CanAddWords').is(':checked'),
+                    CanEditWords: $('#CanEditWords').is(':checked'),
+                    CanDeleteWords: $('#CanDeleteWords').is(':checked'),
+                    CanViewMathOperations: $('#CanViewMathOperations').is(':checked'),
+                    CanAddMathOperations: $('#CanAddMathOperations').is(':checked'),
+                    CanEditMathOperations: $('#CanEditMathOperations').is(':checked'),
+                    CanDeleteMathOperations: $('#CanDeleteMathOperations').is(':checked')
+                };
+
+                $.ajax({
+                    url: `/Users/UpdatePermissions/${userId}`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(permissions),
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert(response.message || 'تم حفظ الصلاحيات بنجاح', 'success');
+                            // إعادة التوجيه إلى صفحة إدارة المستخدمين بعد ثانية واحدة
+                            setTimeout(function() {
+                                window.location.href = '/Users/Index';
+                            }, 1000);
+                        } else {
+                            showAlert(response.message || 'حدث خطأ أثناء حفظ الصلاحيات', 'danger');
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error('Error:', xhr);
+                        showAlert(xhr.responseJSON?.message || 'حدث خطأ أثناء الاتصال بالخادم', 'danger');
+                    }
+                });
+            });
+        });
+    </script>
+}

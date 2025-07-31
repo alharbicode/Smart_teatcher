@@ -1,0 +1,182 @@
+/* المتغيرات الرئيسية */
+:root {
+    --primary-color: #1e88e5;
+    --secondary-color: #ff4081;
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --border-radius: 8px;
+}
+
+/* التصميم الأساسي */
+body {
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* تصميم القائمة العلوية */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color), #1565c0);
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    color: white !important;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.9) !important;
+    font-weight: 500;
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: white !important;
+    background-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+/* تصميم البطاقات */
+.card {
+    background: white;
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), #1565c0);
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+/* تصميم الأزرار */
+.btn {
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #1565c0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* تصميم الجداول */
+.table {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.table thead th {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+/* تصميم النماذج */
+.form-control {
+    border-radius: var(--border-radius);
+    border: 2px solid #e0e0e0;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(30,136,229,0.25);
+}
+
+/* تصميم التذييل */
+.footer {
+    background: linear-gradient(135deg, var(--primary-color), #1565c0);
+    color: white !important;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+}
+
+.footer a {
+    color: white !important;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.footer a:hover {
+    opacity: 0.8;
+}
+
+/* تصميم العناوين */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* تأثيرات إضافية */
+.shadow-hover {
+    transition: all 0.3s ease;
+}
+
+.shadow-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+/* تصميم الرسائل */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+/* تحسين القراءة باللغة العربية */
+[dir="rtl"] {
+    text-align: right;
+}
+
+/* تصميم الأيقونات */
+.fas, .far, .fab {
+    margin-left: 0.5rem;
+}

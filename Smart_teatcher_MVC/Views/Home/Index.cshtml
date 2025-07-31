@@ -1,0 +1,280 @@
+@model Smart_teatcher_MVC.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<div class="dashboard">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <!-- قسم الترحيب -->
+    <div class="welcome-section mb-4">
+        <h1 class="display-4 mb-3">مرحباً بك في لوحة التحكم</h1>
+        <p class="lead">هنا يمكنك إدارة المحتوى التعليمي بكل سهولة</p>
+    </div>
+
+    <!-- قسم الإحصائيات -->
+    <div class="row stats-section mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card shadow-hover">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="stats-number">@Model.TotalWords</h3>
+                            <p class="stats-label">الكلمات</p>
+                        </div>
+                        <i class="fas fa-book fa-2x text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card shadow-hover">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="stats-number">@Model.TotalSentences</h3>
+                            <p class="stats-label">الجمل</p>
+                        </div>
+                        <i class="fas fa-pencil-alt fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card shadow-hover">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="stats-number">@Model.TotalMathExamples</h3>
+                            <p class="stats-label">العمليات الحسابية</p>
+                        </div>
+                        <i class="fas fa-calculator fa-2x text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card shadow-hover">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="stats-number">@(Model.TotalWords + Model.TotalSentences + Model.TotalMathExamples)</h3>
+                            <p class="stats-label">إجمالي العناصر</p>
+                        </div>
+                        <i class="fas fa-chart-bar fa-2x text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم الإجراءات السريعة -->
+    <div class="row quick-actions-section mb-4">
+        <div class="col-12">
+            <h2 class="section-title mb-3">إجراءات سريعة</h2>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card action-card shadow-hover">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        إضافة كلمة جديدة
+                    </h5>
+                    <p class="card-text">أضف كلمات جديدة إلى قاعدة البيانات</p>
+                    <a asp-controller="Words" asp-action="Create" class="btn btn-primary">
+                        إضافة كلمة
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card action-card shadow-hover">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        إضافة جملة جديدة
+                    </h5>
+                    <p class="card-text">أضف جمل جديدة إلى قاعدة البيانات</p>
+                    <a asp-controller="Sentences" asp-action="Create" class="btn btn-primary">
+                        إضافة جملة
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card action-card shadow-hover">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        إضافة عملية حسابية
+                    </h5>
+                    <p class="card-text">أضف عمليات حسابية جديدة</p>
+                    <a asp-controller="MathExamples" asp-action="Create" class="btn btn-primary">
+                        إضافة عملية
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسم آخر التحديثات -->
+    <div class="row recent-updates-section">
+        <div class="col-12">
+            <h2 class="section-title mb-3">آخر التحديثات</h2>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-hover">
+                <div class="card-header">
+                    <h5 class="mb-0">آخر الكلمات المضافة</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentWords != null && Model.RecentWords.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var word in Model.RecentWords)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @word.Text
+                                    <span class="badge bg-primary rounded-pill">
+                                        @word.CreatedAt.ToString("dd/MM/yyyy")
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">لا توجد كلمات مضافة حديثاً</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-hover">
+                <div class="card-header">
+                    <h5 class="mb-0">آخر الجمل المضافة</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentSentences != null && Model.RecentSentences.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var sentence in Model.RecentSentences)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @sentence.Text
+                                    <span class="badge bg-primary rounded-pill">
+                                        @sentence.CreatedAt.ToString("dd/MM/yyyy")
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">لا توجد جمل مضافة حديثاً</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-hover">
+                <div class="card-header">
+                    <h5 class="mb-0">آخر العمليات الحسابية</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentMathExamples != null && Model.RecentMathExamples.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var math in Model.RecentMathExamples)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @math.Num1 @math.ArithmeticOperations @math.Num2
+                                    <span class="badge bg-primary rounded-pill">
+                                        @math.CreatedAt.ToString("dd/MM/yyyy")
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">لا توجد عمليات حسابية مضافة حديثاً</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .dashboard {
+            padding: 2rem 0;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .stats-label {
+            color: #6c757d;
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: none;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        .list-group-item {
+            border-right: none;
+            border-left: none;
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .shadow-hover {
+            transition: all 0.3s ease;
+        }
+
+        .shadow-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+    </style>
+}

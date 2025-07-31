@@ -1,0 +1,6 @@
+@Smart_teatcher_HostAddress = http://localhost:5077
+
+GET {{Smart_teatcher_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

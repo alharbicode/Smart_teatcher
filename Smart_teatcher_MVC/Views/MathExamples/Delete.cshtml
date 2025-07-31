@@ -1,0 +1,85 @@
+@model Smart_teatcher_MVC.Models.MathExample
+
+@{
+    ViewData["Title"] = "حذف العملية الحسابية";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h1 class="m-0">حذف العملية الحسابية</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-sm-end">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right ms-1"></i>
+                        العودة للقائمة
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="alert alert-danger mb-4">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            تأكيد الحذف
+                        </h5>
+                        <p class="mb-0">هل أنت متأكد من رغبتك في حذف هذه العملية الحسابية؟</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-group mb-3">
+                                <label class="text-muted">العملية الحسابية</label>
+                                <p class="mb-0">
+                                    <span class="math-operation-large">
+                                        @Model.Num1 @Html.DisplayFor(m => m.ArithmeticOperations) @Model.Num2
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-group mb-3">
+                                <label class="text-muted">المستوى</label>
+                                <p class="mb-0">@Model.Level</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-group mb-3">
+                                <label class="text-muted">تاريخ الإنشاء</label>
+                                <p class="mb-0">@Model.CreatedAt.ToString("yyyy/MM/dd")</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <form asp-action="DeleteConfirmed">
+                            <input type="hidden" asp-for="Id" />
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt ms-1"></i>
+                                حذف
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .math-operation-large {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+}

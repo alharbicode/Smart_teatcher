@@ -1,0 +1,468 @@
+@model List<Smart_teatcher_MVC.Models.User>
+@{
+    ViewData["Title"] = "إدارة المستخدمين";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h1 class="m-0">إدارة المستخدمين</h1>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-end">
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-1"></i>
+                        إضافة مستخدم جديد
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12">
+            <!-- بطاقة الإحصائيات -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-primary text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-1">@Model.Count()</h3>
+                                    <div>إجمالي المستخدمين</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-users fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-success text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-1">@Model.Count(u => u.IsActive)</h3>
+                                    <div>المستخدمون النشطون</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-user-check fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-warning text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-1">@Model.Count(u => !u.IsActive)</h3>
+                                    <div>المستخدمون المعطلون</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-user-slash fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-info text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-1">@Model.Count(u => u.LastLoginAt?.Date == DateTime.Today)</h3>
+                                    <div>تسجيلات الدخول اليوم</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-sign-in-alt fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- جدول المستخدمين -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">قائمة المستخدمين</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group">
+                                <input type="text" id="searchInput" class="form-control" placeholder="بحث...">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="usersTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="sortable" data-sort="username">
+                                        <i class="fas fa-sort me-1"></i>اسم المستخدم
+                                    </th>
+                                    <th class="sortable" data-sort="email">
+                                        <i class="fas fa-sort me-1"></i>البريد الإلكتروني
+                                    </th>
+                                    <th class="sortable" data-sort="role">
+                                        <i class="fas fa-sort me-1"></i>الدور
+                                    </th>
+                                    <th class="sortable" data-sort="created">
+                                        <i class="fas fa-sort me-1"></i>تاريخ الإنشاء
+                                    </th>
+                                    <th class="sortable" data-sort="lastLogin">
+                                        <i class="fas fa-sort me-1"></i>آخر تسجيل دخول
+                                    </th>
+                                    <th class="sortable" data-sort="status">
+                                        <i class="fas fa-sort me-1"></i>الحالة
+                                    </th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr class="align-middle">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle me-2 @(user.Role == "Root" ? "bg-primary" : "bg-secondary")">
+                                                    @user.Username.Substring(0, 1).ToUpper()
+                                                </div>
+                                                @user.Username
+                                            </div>
+                                        </td>
+                                        <td>@user.Email</td>
+                                        <td>
+                                            @if (user.Role == "Root")
+                                            {
+                                                <span class="badge bg-primary">
+                                                    <i class="fas fa-crown me-1"></i>
+                                                    مدير رئيسي
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-user-shield me-1"></i>
+                                                    مدير فرعي
+                                                </span>
+                                            }
+                                        </td>
+                                        <td data-sort="@user.CreatedAt.Ticks">
+                                            <div class="d-flex align-items-center">
+                                                <i class="far fa-calendar-alt me-2 text-muted"></i>
+                                                @user.CreatedAt.ToString("yyyy/MM/dd")
+                                            </div>
+                                        </td>
+                                        <td data-sort="@(user.LastLoginAt?.Ticks ?? 0)">
+                                            <div class="d-flex align-items-center">
+                                                <i class="far fa-clock me-2 text-muted"></i>
+                                                @(user.LastLoginAt?.ToString("yyyy/MM/dd") ?? "لم يسجل الدخول بعد")
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (user.IsActive)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check-circle me-1"></i>
+                                                    نشط
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-times-circle me-1"></i>
+                                                    معطل
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (user.Role != "Root")
+                                            {
+                                                <div class="btn-group">
+                                                    <button class="btn btn-@(user.IsActive ? "warning" : "success") btn-sm toggle-status" 
+                                                            data-id="@user.Id" 
+                                                            data-status="@(user.IsActive ? "active" : "inactive")"
+                                                            title="@(user.IsActive ? "تعطيل" : "تفعيل")">
+                                                        <i class="fas fa-@(user.IsActive ? "ban" : "check")"></i>
+                                                    </button>
+                                                    <a href="@Url.Action("Edit", new { id = user.Id })" 
+                                                       class="btn btn-primary btn-sm"
+                                                       title="تعديل">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("Permissions", new { id = user.Id })" 
+                                                       class="btn btn-info btn-sm text-white"
+                                                       title="الصلاحيات">
+                                                        <i class="fas fa-key"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger btn-sm delete-user" 
+                                                            data-id="@user.Id" 
+                                                            data-username="@user.Username"
+                                                            title="حذف">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">لا يمكن تعديل المدير الرئيسي</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .stat-icon {
+            opacity: 0.8;
+        }
+
+        .card {
+            border: none;
+            margin-bottom: 1rem;
+        }
+
+        .table th {
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .sortable:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .btn-group .btn {
+            padding: 0.25rem 0.5rem;
+        }
+
+        .btn-group .btn i {
+            width: 16px;
+        }
+
+        .badge {
+            padding: 0.5em 0.8em;
+        }
+
+        #searchInput {
+            max-width: 250px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // تفعيل tooltips
+            $('[title]').tooltip();
+
+            // إضافة رمز التحقق من صحة النموذج المضاد للتزوير
+            var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+            // البحث في الجدول
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#usersTable tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            // ترتيب الجدول
+            $('.sortable').click(function() {
+                var table = $(this).parents('table').eq(0);
+                var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+                this.asc = !this.asc;
+                if (!this.asc) {
+                    rows = rows.reverse();
+                }
+                for (var i = 0; i < rows.length; i++) {
+                    table.append(rows[i]);
+                }
+            });
+
+            function comparer(index) {
+                return function(a, b) {
+                    var valA = getCellValue(a, index);
+                    var valB = getCellValue(b, index);
+                    return $.isNumeric(valA) && $.isNumeric(valB) ?
+                        valA - valB : valA.toString().localeCompare(valB);
+                }
+            }
+
+            function getCellValue(row, index) {
+                var $cell = $(row).children('td').eq(index);
+                return $cell.attr('data-sort') || $cell.text();
+            }
+
+            // تفعيل/تعطيل المستخدم
+            $('.toggle-status').click(function() {
+                var button = $(this);
+                var userId = button.data('id');
+                var status = button.data('status');
+                var isActive = status === 'active';
+                var username = button.closest('tr').find('td:first').text().trim();
+                
+                console.log('Status:', status);
+                console.log('Is Active:', isActive);
+                
+                var title = isActive ? 'تعطيل المستخدم' : 'تفعيل المستخدم';
+                var message = isActive ? 'هل أنت متأكد من تعطيل المستخدم؟' : 'هل أنت متأكد من تفعيل المستخدم؟';
+                var confirmButtonText = isActive ? 'نعم، عطله' : 'نعم، فعله';
+                
+                Swal.fire({
+                    title: title,
+                    text: message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: isActive ? '#dc3545' : '#28a745',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: confirmButtonText,
+                    cancelButtonText: 'إلغاء'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/Users/ToggleActive/' + userId,
+                            type: 'POST',
+                            headers: {
+                                'RequestVerificationToken': antiForgeryToken
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: isActive ? 'تم تعطيل المستخدم' : 'تم تفعيل المستخدم',
+                                        text: response.message,
+                                        icon: 'success'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'خطأ!',
+                                        text: response.message || 'حدث خطأ أثناء تغيير حالة المستخدم',
+                                        icon: 'error'
+                                    });
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    title: 'خطأ!',
+                                    text: 'حدث خطأ في الاتصال بالخادم',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // حذف المستخدم
+            $('.delete-user').click(function() {
+                var button = $(this);
+                var userId = button.data('id');
+                var username = button.data('username');
+                
+                Swal.fire({
+                    title: 'هل أنت متأكد من حذف المستخدم؟',
+                    text: username,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'نعم، احذفه',
+                    cancelButtonText: 'إلغاء'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/Users/Delete/' + userId,
+                            type: 'POST',
+                            headers: {
+                                'RequestVerificationToken': antiForgeryToken
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'تم الحذف!',
+                                        text: response.message,
+                                        icon: 'success'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'خطأ!',
+                                        text: response.message || 'حدث خطأ أثناء حذف المستخدم',
+                                        icon: 'error'
+                                    });
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    title: 'خطأ!',
+                                    text: 'حدث خطأ في الاتصال بالخادم',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
